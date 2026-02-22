@@ -1,0 +1,3 @@
+﻿User-agent: *
+Allow: /
+Sitemap: https://quotevibe-official.netlify.app/sitemap.xml

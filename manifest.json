@@ -1,22 +1,30 @@
 ﻿{
-  "name": "QuoteVibe",
-  "short_name": "QuoteVibe",
-  "description": "Beautiful quotes on stunning backgrounds. Download & share instantly.",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#0a0a0f",
-  "theme_color": "#c9a84c",
-  "orientation": "portrait",
-  "icons": [
-    {
-      "src": "https://via.placeholder.com/192x192/c9a84c/0a0a0f?text=QV",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "https://via.placeholder.com/512x512/c9a84c/0a0a0f?text=QV",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+    "name":  "QuoteVibe",
+    "short_name":  "QuoteVibe",
+    "description":  "Beautiful quotes on stunning backgrounds. Download \u0026 share instantly.",
+    "start_url":  "/",
+    "display":  "standalone",
+    "background_color":  "#0a0a0f",
+    "theme_color":  "#c9a84c",
+    "orientation":  "portrait",
+    "icons":  [
+                  {
+                      "src":  "icon.svg",
+                      "sizes":  "any",
+                      "type":  "image/svg+xml",
+                      "purpose":  "any"
+                  },
+                  {
+                      "src":  "icon-192.png",
+                      "sizes":  "192x192",
+                      "type":  "image/png",
+                      "purpose":  "any maskable"
+                  },
+                  {
+                      "src":  "icon-512.png",
+                      "sizes":  "512x512",
+                      "type":  "image/png",
+                      "purpose":  "any maskable"
+                  }
+              ]
 }

@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#0a0a0f"/>
+  <meta name="description" content="Privacy Policy - QuoteVibe"/>
+  <title>Privacy Policy - QuoteVibe</title>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold:#c9a84c; --gold2:#f0d080; --bg:#0a0a0f;
+      --surface:rgba(255,255,255,0.04); --surface2:rgba(255,255,255,0.07);
+      --border:rgba(201,168,76,0.18); --text:#f0ece4;
+      --muted:rgba(240,236,228,0.45); --radius:18px;
+      --shadow:0 8px 48px rgba(0,0,0,0.7);
+    }
+    html { scroll-behavior:smooth; }
+    body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+    body::before {
+      content:''; position:fixed; inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events:none; z-index:0; opacity:0.4;
+    }
+
+    header { position:relative; z-index:10; padding:18px 24px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); gap:14px; flex-wrap:wrap; }
+    .logo { font-family:'Bebas Neue',sans-serif; font-size:1.85rem; letter-spacing:4px; background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; text-decoration:none; line-height:1; }
+    .logo span { font-family:'DM Sans',sans-serif; font-size:0.5rem; letter-spacing:3px; display:block; color:var(--muted); margin-top:-4px; }
+
+    .main-content { position:relative; z-index:2; max-width:920px; margin:0 auto; padding:26px 22px 40px; }
+
+    .actions { display:flex; gap:9px; justify-content:flex-start; flex-wrap:wrap; margin-bottom:18px; }
+    .btn { display:inline-flex; align-items:center; gap:7px; padding:10px 20px; border-radius:100px; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:0.79rem; font-weight:500; letter-spacing:0.5px; transition:all 0.22s; will-change:transform; text-decoration:none; }
+    .btn-ghost { background:var(--surface); border:1px solid var(--border); color:var(--text); backdrop-filter:blur(8px); }
+    .btn-ghost:hover { border-color:var(--gold); color:var(--gold); background:rgba(201,168,76,0.06); transform:translateY(-2px); }
+
+    .hero { margin-bottom:18px; animation:fadeUp 0.5s ease forwards; }
+    .hero h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(1.7rem,4vw,2.2rem); letter-spacing:3px; color:var(--gold); margin-bottom:7px; }
+    .hero p { font-size:0.82rem; line-height:1.7; color:var(--muted); }
+
+    .page-card { position:relative; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:20px 18px; margin-bottom:14px; backdrop-filter:blur(8px); overflow:hidden; animation:fadeUp 0.5s ease forwards; }
+    .page-card::after { content:''; position:absolute; inset:0; border-radius:var(--radius); border:1px solid rgba(201,168,76,0.1); pointer-events:none; }
+    .page-card h2 { font-family:'Bebas Neue',sans-serif; font-size:1.24rem; letter-spacing:2px; color:var(--gold2); margin-bottom:8px; }
+    .page-card p { font-size:0.82rem; line-height:1.75; color:var(--text); }
+    .page-card p + p { margin-top:8px; }
+    .page-card ul { margin-left:18px; }
+    .page-card li { font-size:0.82rem; line-height:1.75; color:var(--text); margin-bottom:5px; }
+    .inline-link { color:var(--gold); text-decoration:none; transition:all 0.22s; border-bottom:1px solid transparent; }
+    .inline-link:hover { color:var(--gold); border-bottom-color:var(--gold); }
+
+    .site-footer { position:relative; z-index:10; padding:16px 24px; border-top:1px solid var(--border); background:rgba(201,168,76,0.03); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+    .site-footer p { font-size:0.69rem; color:var(--muted); letter-spacing:0.4px; }
+    .site-footer-nav { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .site-footer a { color:var(--muted); text-decoration:none; font-size:0.74rem; letter-spacing:0.8px; transition:all 0.22s; }
+    .site-footer a:hover { color:var(--gold); transform:translateY(-1px); }
+    .site-footer-sep { color:var(--muted); opacity:0.7; font-size:0.66rem; }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+    @media(max-width:768px) {
+      header { padding:14px; }
+      .main-content { padding:14px 12px 32px; }
+      .site-footer { flex-direction:column; text-align:center; }
+    }
+    @media(max-width:360px) {
+      .hero h1 { letter-spacing:2px; }
+    }
+    @media(min-width:1100px) {
+      .main-content { max-width:920px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="index.html">QuoteVibe<span>Feel Every Word</span></a>
+</header>
+
+<main class="main-content">
+  <div class="actions">
+    <a class="btn btn-ghost" href="index.html">&larr; Back to QuoteVibe</a>
+  </div>
+
+  <section class="hero">
+    <h1>Privacy Policy</h1>
+    <p>Last updated: February 22, 2026</p>
+  </section>
+
+  <section class="page-card">
+    <h2>1. Introduction</h2>
+    <p>QuoteVibe is a free Progressive Web App for discovering inspiring quotes.</p>
+    <p>Site URL: <a class="inline-link" href="https://quotevibe-official.netlify.app" target="_blank" rel="noopener">https://quotevibe-official.netlify.app</a></p>
+  </section>
+
+  <section class="page-card">
+    <h2>2. Information We Collect</h2>
+    <p>We do NOT collect personal information. No registration is required.</p>
+    <p>No names, emails, or phone numbers are collected.</p>
+  </section>
+
+  <section class="page-card">
+    <h2>3. Third-Party Services</h2>
+    <ul>
+      <li>Google AdSense serves ads and may use cookies for ad personalization. You can opt out at <a class="inline-link" href="https://www.google.com/settings/ads" target="_blank" rel="noopener">https://www.google.com/settings/ads</a>.</li>
+      <li>Google Analytics GA4 provides anonymous usage tracking for pageviews and events only. It does not identify you personally.</li>
+    </ul>
+  </section>
+
+  <section class="page-card">
+    <h2>4. Cookies</h2>
+    <p>We do not set cookies directly. Only AdSense and Analytics may set cookies.</p>
+    <p>You can disable cookies from your browser settings at any time.</p>
+  </section>
+
+  <section class="page-card">
+    <h2>5. External Links</h2>
+    <p>QuoteVibe includes WhatsApp sharing links that open an external platform.</p>
+    <p>We are not responsible for external platform privacy practices.</p>
+  </section>
+
+  <section class="page-card">
+    <h2>6. Children's Privacy</h2>
+    <p>We do not collect data from children under 13.</p>
+  </section>
+
+  <section class="page-card">
+    <h2>7. Changes to This Policy</h2>
+    <p>This policy may be updated as needed. Any changes will be posted on this page.</p>
+  </section>
+
+  <section class="page-card">
+    <h2>8. Contact</h2>
+    <p>Email: <a class="inline-link" href="mailto:jaisankarpeddiboyina@gmail.com">jaisankarpeddiboyina@gmail.com</a></p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>&copy; 2026 QuoteVibe. All rights reserved.</p>
+  <nav class="site-footer-nav" aria-label="Footer links">
+    <a href="privacy.html">Privacy Policy</a>
+    <span class="site-footer-sep">|</span>
+    <a href="about.html">About</a>
+    <span class="site-footer-sep">|</span>
+    <a href="contact.html">Contact</a>
+  </nav>
+</footer>
+
+</body>
+</html>
