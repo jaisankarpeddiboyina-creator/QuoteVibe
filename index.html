@@ -1,0 +1,1142 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#0a0a0f"/>
+  <meta name="description" content="QuoteVibe - Beautiful quotes on stunning backgrounds. Download & share instantly."/>
+  <title>QuoteVibe – Feel Every Word</title>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold:#c9a84c; --gold2:#f0d080; --bg:#0a0a0f;
+      --surface:rgba(255,255,255,0.04); --surface2:rgba(255,255,255,0.07);
+      --border:rgba(201,168,76,0.18); --text:#f0ece4;
+      --muted:rgba(240,236,228,0.45); --radius:18px;
+      --shadow:0 8px 48px rgba(0,0,0,0.7);
+    }
+    html { scroll-behavior:smooth; }
+    body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+    body::before {
+      content:''; position:fixed; inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events:none; z-index:0; opacity:0.4;
+    }
+
+    /* AD ZONES */
+    .ad-top { width:100%; min-height:60px; display:flex; align-items:center; justify-content:center; background:rgba(201,168,76,0.04); border-bottom:1px solid var(--border); font-size:11px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; position:relative; z-index:10; }
+    .ad-bottom { width:100%; min-height:90px; display:flex; align-items:center; justify-content:center; background:rgba(201,168,76,0.04); border-top:1px solid var(--border); font-size:11px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; position:relative; z-index:10; }
+    .ad-sidebar { min-width:140px; align-items:center; justify-content:center; background:rgba(201,168,76,0.03); border-left:1px solid var(--border); font-size:11px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; writing-mode:vertical-rl; display:none; }
+    .ad-inline { width:100%; min-height:90px; display:flex; align-items:center; justify-content:center; border:1px dashed var(--border); border-radius:var(--radius); margin:24px 0; font-size:11px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; }
+
+    /* HEADER */
+    header { position:relative; z-index:10; padding:18px 24px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); gap:14px; flex-wrap:wrap; }
+    .logo { font-family:'Bebas Neue',sans-serif; font-size:1.85rem; letter-spacing:4px; background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; flex-shrink:0; }
+    .logo span { font-family:'DM Sans',sans-serif; font-size:0.5rem; letter-spacing:3px; display:block; -webkit-text-fill-color:var(--muted); color:var(--muted); margin-top:-4px; }
+
+    /* SEARCH */
+    .search-wrap { flex:1; max-width:340px; min-width:160px; position:relative; }
+    .search-wrap svg { position:absolute; left:13px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:var(--muted); pointer-events:none; }
+    #searchInput { width:100%; padding:9px 14px 9px 36px; background:var(--surface); border:1px solid var(--border); border-radius:100px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.82rem; outline:none; transition:border-color 0.2s; }
+    #searchInput::placeholder { color:var(--muted); }
+    #searchInput:focus { border-color:var(--gold); }
+
+    /* NAV */
+    .nav-tabs { display:flex; gap:4px; background:var(--surface); border:1px solid var(--border); border-radius:100px; padding:4px; flex-shrink:0; }
+    .nav-tab { padding:7px 16px; border-radius:100px; border:none; background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:0.76rem; font-weight:500; cursor:pointer; transition:all 0.2s; }
+    .nav-tab.active { background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#0a0a0f; font-weight:600; }
+
+    /* API STATUS */
+    .api-status { display:flex; gap:6px; align-items:center; font-size:0.67rem; color:var(--muted); letter-spacing:1px; flex-shrink:0; }
+    .dot { width:6px; height:6px; border-radius:50%; background:#25d366; animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* PAGES */
+    .page { display:none; }
+    .page.active { display:block; }
+
+    /* LAYOUT */
+    .app-wrapper { display:flex; position:relative; z-index:2; }
+    .main-content { flex:1; padding:26px 22px 40px; max-width:920px; margin:0 auto; }
+
+    /* CATEGORY PILLS */
+    .categories { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px; }
+    .cat-pill { padding:7px 17px; border-radius:100px; border:1px solid var(--border); background:var(--surface); color:var(--muted); font-size:0.75rem; font-weight:500; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all 0.22s; backdrop-filter:blur(8px); }
+    .cat-pill:hover { border-color:var(--gold); color:var(--gold); background:rgba(201,168,76,0.08); }
+    .cat-pill.active { background:linear-gradient(135deg,var(--gold),var(--gold2)); border-color:transparent; color:#0a0a0f; font-weight:600; box-shadow:0 4px 20px rgba(201,168,76,0.3); }
+
+    /* SINGLE QUOTE CARD */
+    .card-wrapper { position:relative; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); aspect-ratio:1/1; max-width:540px; margin:0 auto 22px; }
+    #quoteCard { position:relative; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:46px 42px; text-align:center; min-height:340px; }
+    #bgImage { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:opacity 0.6s ease; }
+    #quoteCard::before { content:''; position:absolute; inset:0; background:linear-gradient(160deg,rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.62) 50%,rgba(0,0,0,0.38) 100%); z-index:1; }
+    .card-wrapper::after { content:''; position:absolute; inset:0; border-radius:var(--radius); border:1px solid var(--border); pointer-events:none; z-index:5; }
+    .quote-content { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:16px; animation:fadeUp 0.5s ease forwards; will-change:transform,opacity; }
+    .quote-mark { font-family:'Cormorant Garamond',serif; font-size:4.2rem; line-height:0.6; color:var(--gold); opacity:0.7; margin-bottom:-4px; }
+    #quoteText { font-family:'Cormorant Garamond',serif; font-size:clamp(1.1rem,3.2vw,1.75rem); font-style:italic; font-weight:400; line-height:1.55; color:#fff; text-shadow:0 2px 20px rgba(0,0,0,0.6); max-width:440px; }
+    #quoteAuthor { font-family:'DM Sans',sans-serif; font-size:0.73rem; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--gold2); opacity:0.9; }
+    .watermark { position:absolute; bottom:11px; right:13px; font-family:'Bebas Neue',sans-serif; font-size:0.66rem; letter-spacing:2px; color:rgba(255,255,255,0.26); z-index:3; }
+    .shimmer { position:absolute; inset:0; background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.04) 50%,rgba(255,255,255,0) 100%); background-size:200% 100%; animation:shimmer 1.5s infinite; z-index:4; display:none; }
+    .loading .shimmer { display:block; }
+    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+    /* BUTTONS */
+    .actions { display:flex; gap:9px; justify-content:center; flex-wrap:wrap; margin-bottom:18px; }
+    .btn { display:flex; align-items:center; gap:7px; padding:10px 20px; border-radius:100px; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:0.79rem; font-weight:500; letter-spacing:0.5px; transition:all 0.22s; will-change:transform; }
+    .btn svg { width:14px; height:14px; flex-shrink:0; }
+    .btn-primary { background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#0a0a0f; box-shadow:0 4px 18px rgba(201,168,76,0.2); }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 26px rgba(201,168,76,0.36); }
+    .btn-ghost { background:var(--surface); border:1px solid var(--border); color:var(--text); backdrop-filter:blur(8px); }
+    .btn-ghost:hover { border-color:var(--gold); color:var(--gold); background:rgba(201,168,76,0.06); transform:translateY(-2px); }
+    .btn-whatsapp { background:linear-gradient(135deg,#25d366,#128c7e); color:#fff; box-shadow:0 4px 18px rgba(37,211,102,0.16); }
+    .btn-whatsapp:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(37,211,102,0.28); }
+
+    /* STATS */
+    .stats-bar { display:flex; gap:26px; justify-content:center; margin-bottom:26px; flex-wrap:wrap; }
+    .stat { text-align:center; }
+    .stat-num { font-family:'Bebas Neue',sans-serif; font-size:1.65rem; color:var(--gold); letter-spacing:2px; }
+    .stat-label { font-size:0.65rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase; }
+
+    /* GALLERY */
+    .gallery-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+    .gallery-header h2 { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; letter-spacing:3px; color:var(--gold); }
+    .gallery-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px; margin-bottom:24px; }
+    .gcard { position:relative; border-radius:14px; overflow:hidden; aspect-ratio:1/1; cursor:pointer; box-shadow:0 4px 24px rgba(0,0,0,0.5); transition:transform 0.22s,box-shadow 0.22s; background:#111; will-change:transform; }
+    .gcard:hover { transform:translateY(-4px); box-shadow:0 12px 40px rgba(0,0,0,0.7); }
+    .gcard img { width:100%; height:100%; object-fit:cover; transition:opacity 0.5s; }
+    .gcard::before { content:''; position:absolute; inset:0; background:linear-gradient(160deg,rgba(0,0,0,0.18) 0%,rgba(0,0,0,0.65) 100%); z-index:1; }
+    .gcard-border { position:absolute; inset:0; border-radius:14px; border:1px solid var(--border); pointer-events:none; z-index:4; }
+    .gcard-content { position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:18px 16px; text-align:center; }
+    .gcard-quote { font-family:'Cormorant Garamond',serif; font-size:clamp(0.82rem,1.8vw,1rem); font-style:italic; color:#fff; line-height:1.5; text-shadow:0 1px 12px rgba(0,0,0,0.7); margin-bottom:9px; }
+    .gcard-author { font-family:'DM Sans',sans-serif; font-size:0.62rem; font-weight:500; letter-spacing:2.5px; text-transform:uppercase; color:var(--gold2); opacity:0.88; }
+    .gcard-actions { position:absolute; bottom:0; left:0; right:0; z-index:3; padding:10px; display:flex; gap:6px; justify-content:center; background:linear-gradient(0deg,rgba(0,0,0,0.75) 0%,transparent 100%); opacity:0; transition:opacity 0.22s; }
+    .gcard:hover .gcard-actions { opacity:1; }
+    .gcard-btn { padding:5px 11px; border-radius:100px; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.12); color:#fff; font-size:0.68rem; font-weight:500; cursor:pointer; backdrop-filter:blur(6px); transition:all 0.18s; }
+    .gcard-btn:hover { background:var(--gold); border-color:var(--gold); color:#0a0a0f; }
+    .gcard.skeleton::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,#1a1a22 25%,#232330 50%,#1a1a22 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; z-index:5; }
+
+    /* SHOW MORE */
+    .show-more-wrap { text-align:center; margin:8px 0 32px; }
+    .btn-show-more { padding:12px 38px; border-radius:100px; background:var(--surface2); border:1px solid var(--border); color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.83rem; font-weight:500; letter-spacing:1px; cursor:pointer; transition:all 0.22s; }
+    .btn-show-more:hover { border-color:var(--gold); color:var(--gold); }
+    .btn-show-more:disabled { opacity:0.45; cursor:not-allowed; }
+
+    /* AD GATE MODAL */
+    .ad-gate-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:1000; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(8px); opacity:0; pointer-events:none; transition:opacity 0.3s; }
+    .ad-gate-overlay.open { opacity:1; pointer-events:all; }
+    .ad-gate-box { background:#12121a; border:1px solid var(--border); border-radius:24px; padding:36px 32px; max-width:400px; width:90%; text-align:center; box-shadow:0 24px 80px rgba(0,0,0,0.8); }
+    .ad-gate-box h3 { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; letter-spacing:3px; color:var(--gold); margin-bottom:8px; }
+    .ad-gate-box p { font-size:0.81rem; color:var(--muted); margin-bottom:22px; line-height:1.6; }
+    .ad-gate-ad { width:100%; min-height:120px; background:rgba(201,168,76,0.05); border:1px dashed var(--border); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-bottom:20px; }
+    .ad-timer { font-family:'Bebas Neue',sans-serif; font-size:2.2rem; color:var(--gold); letter-spacing:4px; margin-bottom:14px; transition:transform 0.14s ease,opacity 0.14s ease; will-change:transform,opacity; display:inline-block; font-variant-numeric:tabular-nums; }
+    .ad-skip-btn { padding:11px 34px; border-radius:100px; background:linear-gradient(135deg,var(--gold),var(--gold2)); border:none; color:#0a0a0f; font-family:'DM Sans',sans-serif; font-size:0.83rem; font-weight:600; cursor:pointer; opacity:0.38; transition:opacity 0.3s,transform 0.2s; will-change:transform; }
+    .ad-skip-btn.ready { opacity:1; }
+    .ad-skip-btn.ready:hover { transform:scale(1.04); }
+
+    /* SEARCH LABEL */
+    .search-results-label { font-size:0.76rem; color:var(--muted); letter-spacing:1px; margin-bottom:14px; display:none; }
+    .search-results-label.show { display:block; }
+
+    /* TOAST */
+    .toast { position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(80px); background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#0a0a0f; padding:10px 24px; border-radius:100px; font-size:0.79rem; font-weight:600; z-index:2000; transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1); pointer-events:none; white-space:nowrap; will-change:transform; }
+    .toast.show { transform:translateX(-50%) translateY(0); }
+
+    /* FOOTER */
+    footer { position:relative; z-index:10; padding:16px 24px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+    footer p { font-size:0.69rem; color:var(--muted); }
+    footer a { color:var(--gold); text-decoration:none; }
+
+    /* RESPONSIVE */
+    @media(max-width:768px) {
+      .ad-sidebar { display:none !important; }
+      header { padding:14px; }
+      .search-wrap { max-width:100%; order:3; flex-basis:100%; }
+      .main-content { padding:14px 12px 32px; }
+      .card-wrapper { max-width:100%; aspect-ratio:4/5; }
+      #quoteCard { padding:30px 22px; }
+      .gallery-grid { grid-template-columns:repeat(2,1fr); gap:9px; }
+      footer { flex-direction:column; text-align:center; }
+    }
+    @media(max-width:360px) { .gallery-grid { grid-template-columns:1fr; } }
+    @media(min-width:1100px) { .ad-sidebar { display:flex !important; min-height:600px; } }
+  </style>
+</head>
+<body>
+
+<!-- TOP AD -->
+<div class="ad-top"><!-- ADSENSE 728x90 TOP -->Advertisement · 728×90</div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">QuoteVibe<span>Feel Every Word</span></div>
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="searchInput" placeholder="Search quotes, authors..."/>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchPage('home'); generateNew();">✦ Generate</button>
+    <button class="nav-tab" onclick="switchPage('explore')">◈ Explore</button>
+  </div>
+  <div class="api-status"><div class="dot"></div><span id="apiStatusText">Live</span></div>
+</header>
+
+<!-- MAIN WRAPPER -->
+<div class="app-wrapper">
+  <div class="ad-sidebar" id="adLeft"><!-- ADSENSE 120x600 LEFT -->Ad · 120×600</div>
+
+  <div class="main-content">
+
+    <!-- PAGE: GENERATE -->
+    <div class="page active" id="page-home">
+      <div class="stats-bar">
+        <div class="stat"><div class="stat-num" id="statGenerated">0</div><div class="stat-label">Generated</div></div>
+        <div class="stat"><div class="stat-num" id="statDownloaded">0</div><div class="stat-label">Downloaded</div></div>
+        <div class="stat"><div class="stat-num">10K+</div><div class="stat-label">Quotes</div></div>
+      </div>
+      <div class="categories" id="categories">
+        <button class="cat-pill active" data-cat="all">✦ All</button>
+        <button class="cat-pill" data-cat="motivational">🔥 Motivation</button>
+        <button class="cat-pill" data-cat="love">❤️ Love</button>
+        <button class="cat-pill" data-cat="life">🌿 Life</button>
+        <button class="cat-pill" data-cat="wisdom">🔮 Wisdom</button>
+        <button class="cat-pill" data-cat="friendship">🤝 Friendship</button>
+        <button class="cat-pill" data-cat="success">🏆 Success</button>
+        <button class="cat-pill" data-cat="nature">🌸 Nature</button>
+        <button class="cat-pill" data-cat="funny">😄 Funny</button>
+        <button class="cat-pill" data-cat="faith">🙏 Faith</button>
+        <button class="cat-pill" data-cat="courage">⚡ Courage</button>
+      </div>
+      <div class="card-wrapper">
+        <div id="quoteCard" class="loading">
+          <img id="bgImage" src="" alt="background" crossorigin="anonymous"/>
+          <div class="shimmer"></div>
+          <div class="quote-content" id="quoteContent">
+            <div class="quote-mark">"</div>
+            <p id="quoteText">Loading a beautiful quote for you...</p>
+            <p id="quoteAuthor">— QuoteVibe</p>
+          </div>
+          <div class="watermark">QuoteVibe.app</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="generateNew()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>New Quote
+        </button>
+        <button class="btn btn-ghost" onclick="changeBackground()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>New Image
+        </button>
+        <button class="btn btn-ghost" onclick="downloadQuote()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download
+        </button>
+        <button class="btn btn-whatsapp" onclick="shareWhatsApp()">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.372-.01-.571-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.463 1.065 2.877 1.214 3.075.148.198 2.095 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.075-.124-.273-.198-.57-.347zm-5.421 7.403h-.004a8.37 8.37 0 01-4.258-1.161l-.305-.182-3.165.83.845-3.084-.2-.316a8.365 8.365 0 011.279-10.454 8.37 8.37 0 1112.834 11.833 8.365 8.365 0 01-5.926 2.534zm7.863-16.369A11.154 11.154 0 0012.035 1C5.496 1 .174 6.323.174 12.862c0 2.092.547 4.134 1.587 5.934L0 24l5.369-1.407a11.824 11.824 0 005.666 1.443h.005c6.538 0 11.86-5.323 11.86-11.862a11.15 11.15 0 00-3.482-7.858z"/></svg>WhatsApp
+        </button>
+      </div>
+
+      <div class="ad-inline"><!-- ADSENSE INLINE 728x90 -->Advertisement · 728×90</div>
+    </div>
+
+    <!-- PAGE: EXPLORE -->
+    <div class="page" id="page-explore">
+      <div class="search-results-label" id="searchResultsLabel"></div>
+      <div class="gallery-header">
+        <h2>Explore Quotes</h2>
+      </div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+      <div class="show-more-wrap">
+        <button class="btn-show-more" id="showMoreBtn" onclick="showMoreWithAd()">Show More</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="ad-sidebar" id="adRight"><!-- ADSENSE 120x600 RIGHT -->Ad · 120×600</div>
+</div>
+
+<!-- AD GATE MODAL -->
+<div class="ad-gate-overlay" id="adGateOverlay">
+  <div class="ad-gate-box">
+    <h3>Quick Sponsor Break</h3>
+    <p>Watch this short ad for 5 seconds to unlock more quote cards.</p>
+    <div class="ad-gate-ad"><!-- ADSENSE MODAL 300x250 -->Advertisement · 300×250</div>
+    <div class="ad-timer" id="adTimer">5</div>
+    <button class="ad-skip-btn" id="adSkipBtn" onclick="adGateComplete()">Skip & Continue</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">Ready</div>
+
+<!-- BOTTOM AD -->
+<div class="ad-bottom"><!-- ADSENSE 728x90 BOTTOM -->Advertisement · 728×90</div>
+
+<footer>
+  <p>© 2026 QuoteVibe. Feel Every Word.</p>
+  <p><a href="#" onclick="switchPage('home'); generateNew(); return false;">Generate</a> · <a href="#" onclick="switchPage('explore'); return false;">Explore</a></p>
+</footer>
+
+<script>
+  const PEXELS_API_KEY = '';
+  const PIXABAY_API_KEY = '';
+
+  const LOCAL_QUOTES = [
+    { content: 'Push yourself, because no one else is going to do it for you.', author: 'Unknown', category: 'motivational' },
+    { content: 'Small steps every day become giant leaps over time.', author: 'Unknown', category: 'motivational' },
+    { content: 'Discipline is choosing what you want most over what you want now.', author: 'Unknown', category: 'motivational' },
+    { content: 'Love is not what you say. Love is what you do.', author: 'Unknown', category: 'love' },
+    { content: 'In the middle of ordinary days, love gives us fairy tales.', author: 'Unknown', category: 'love' },
+    { content: 'Where there is love, there is life.', author: 'Mahatma Gandhi', category: 'love' },
+    { content: 'Life is really simple, but we insist on making it complicated.', author: 'Confucius', category: 'life' },
+    { content: 'Your life does not get better by chance, it gets better by change.', author: 'Jim Rohn', category: 'life' },
+    { content: 'Life is short. Make it meaningful.', author: 'Unknown', category: 'life' },
+    { content: 'Knowing yourself is the beginning of all wisdom.', author: 'Aristotle', category: 'wisdom' },
+    { content: 'Turn your wounds into wisdom.', author: 'Oprah Winfrey', category: 'wisdom' },
+    { content: 'Silence is often the loudest kind of wisdom.', author: 'Unknown', category: 'wisdom' },
+    { content: 'A real friend is one who walks in when the world walks out.', author: 'Walter Winchell', category: 'friendship' },
+    { content: 'Friendship doubles joy and divides sorrow.', author: 'Francis Bacon', category: 'friendship' },
+    { content: 'Good friends are like stars. You do not always see them, but they are always there.', author: 'Unknown', category: 'friendship' },
+    { content: 'Success is the sum of small efforts repeated daily.', author: 'Robert Collier', category: 'success' },
+    { content: 'Success usually comes to those too busy to be looking for it.', author: 'Henry David Thoreau', category: 'success' },
+    { content: 'Do not watch the clock; do what it does. Keep going.', author: 'Sam Levenson', category: 'success' },
+    { content: 'Nature does not hurry, yet everything is accomplished.', author: 'Lao Tzu', category: 'nature' },
+    { content: 'Adopt the pace of nature: her secret is patience.', author: 'Ralph Waldo Emerson', category: 'nature' },
+    { content: 'Look deep into nature, and then you will understand everything better.', author: 'Albert Einstein', category: 'nature' },
+    { content: 'I am on a seafood diet. I see food and I eat it.', author: 'Unknown', category: 'funny' },
+    { content: 'Why do they call it rush hour when nothing moves?', author: 'Robin Williams', category: 'funny' },
+    { content: 'Common sense is like deodorant. The people who need it most never use it.', author: 'Unknown', category: 'funny' },
+    { content: 'Faith is taking the first step even when you do not see the staircase.', author: 'Martin Luther King Jr.', category: 'faith' },
+    { content: 'Feed your faith and your fears will starve.', author: 'Unknown', category: 'faith' },
+    { content: 'Faith sees light with your heart when all your eyes see is darkness.', author: 'Unknown', category: 'faith' },
+    { content: 'Courage is grace under pressure.', author: 'Ernest Hemingway', category: 'courage' },
+    { content: 'You gain strength, courage, and confidence by every experience in which you stop to look fear in the face.', author: 'Eleanor Roosevelt', category: 'courage' },
+    { content: 'It takes courage to grow up and become who you really are.', author: 'E. E. Cummings', category: 'courage' }
+  ];
+
+  const state = {
+    currentPage: 'home',
+    currentCategory: 'all',
+    currentQuote: LOCAL_QUOTES[0],
+    currentImage: '',
+    generatedCount: Number(localStorage.getItem('qv_generated') || 0),
+    downloadedCount: Number(localStorage.getItem('qv_downloaded') || 0),
+    gallery: [],
+    nextGalleryId: 1,
+    galleryLoading: false,
+    searchText: '',
+    adTimerId: null,
+    adRemaining: 5,
+    pendingShowMore: false,
+    quoteCache: {},
+    quotePrefetchInFlight: {},
+    quotePrefetchDone: {},
+    nextBackgroundUrl: '',
+    nextBackgroundQuery: '',
+    nextBackgroundPromise: null,
+    preloadedImages: new Set()
+  };
+
+  const els = {};
+
+  function pickRandom(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function normalizeCategory(category) {
+    return (category || 'all').toLowerCase();
+  }
+
+  function setApiStatus(label) {
+    if (els.apiStatusText) {
+      els.apiStatusText.textContent = label;
+    }
+  }
+
+  function showToast(message) {
+    if (!els.toast) {
+      return;
+    }
+    els.toast.textContent = message;
+    els.toast.classList.add('show');
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(() => {
+      els.toast.classList.remove('show');
+    }, 1800);
+  }
+
+  function updateStatsUi() {
+    if (els.statGenerated) {
+      els.statGenerated.textContent = String(state.generatedCount);
+    }
+    if (els.statDownloaded) {
+      els.statDownloaded.textContent = String(state.downloadedCount);
+    }
+  }
+
+  function persistStats() {
+    localStorage.setItem('qv_generated', String(state.generatedCount));
+    localStorage.setItem('qv_downloaded', String(state.downloadedCount));
+  }
+
+  function getFilteredLocalQuotes(category, searchText) {
+    const cat = normalizeCategory(category);
+    const needle = (searchText || '').trim().toLowerCase();
+
+    let pool = LOCAL_QUOTES.slice();
+
+    if (cat !== 'all') {
+      pool = pool.filter((q) => normalizeCategory(q.category) === cat);
+    }
+
+    if (needle) {
+      pool = pool.filter((q) => (`${q.content} ${q.author}`).toLowerCase().includes(needle));
+    }
+
+    return pool;
+  }
+
+  function getLocalQuote(category, searchText) {
+    const scoped = getFilteredLocalQuotes(category, searchText);
+    if (scoped.length > 0) {
+      return { ...pickRandom(scoped) };
+    }
+
+    const fallbackByCategory = getFilteredLocalQuotes(category, '');
+    if (fallbackByCategory.length > 0) {
+      return { ...pickRandom(fallbackByCategory) };
+    }
+
+    return { ...pickRandom(LOCAL_QUOTES) };
+  }
+
+  function getQuoteCacheKey(category) {
+    return normalizeCategory(category || 'all');
+  }
+
+  function getQuoteCache(category) {
+    const key = getQuoteCacheKey(category);
+    if (!state.quoteCache[key]) {
+      state.quoteCache[key] = [];
+    }
+    return state.quoteCache[key];
+  }
+
+  function cacheQuote(category, quote) {
+    if (!quote || !quote.content) {
+      return;
+    }
+
+    const key = getQuoteCacheKey(category);
+    const bucket = getQuoteCache(key);
+    bucket.unshift({
+      content: quote.content,
+      author: quote.author || 'Unknown',
+      category: key
+    });
+
+    if (bucket.length > 12) {
+      bucket.length = 12;
+    }
+  }
+
+  function getCachedQuote(category) {
+    const bucket = getQuoteCache(category);
+    if (bucket.length === 0) {
+      return null;
+    }
+    return { ...pickRandom(bucket) };
+  }
+
+  function getInstantQuote(category, searchText) {
+    const hasSearch = Boolean((searchText || '').trim());
+    if (!hasSearch) {
+      const cached = getCachedQuote(category);
+      if (cached) {
+        return { quote: cached, fromCache: true };
+      }
+    }
+
+    return { quote: getLocalQuote(category, searchText), fromCache: false };
+  }
+
+  async function fetchQuotableQuote(category) {
+    try {
+      const cat = normalizeCategory(category);
+      const query = cat !== 'all' ? `?tags=${encodeURIComponent(cat)}` : '';
+      const res = await fetch(`https://api.quotable.io/random${query}`, { cache: 'no-store' });
+      if (!res.ok) {
+        throw new Error(`Quotable HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+      if (!data || !data.content) {
+        throw new Error('Invalid quotable payload');
+      }
+
+      return {
+        content: data.content,
+        author: data.author || 'Unknown',
+        category: cat === 'all' ? 'wisdom' : cat
+      };
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  async function prefetchQuoteForCategory(category) {
+    const key = getQuoteCacheKey(category);
+    if (state.quotePrefetchDone[key] || state.quotePrefetchInFlight[key]) {
+      return;
+    }
+
+    state.quotePrefetchInFlight[key] = true;
+    try {
+      const quote = await fetchQuotableQuote(key);
+      if (quote) {
+        cacheQuote(key, quote);
+        setApiStatus('Live');
+      } else {
+        setApiStatus('Fallback');
+      }
+    } finally {
+      state.quotePrefetchDone[key] = true;
+      delete state.quotePrefetchInFlight[key];
+    }
+  }
+
+  async function getQuote(category) {
+    const key = getQuoteCacheKey(category);
+    const { quote, fromCache } = getInstantQuote(key, state.searchText);
+    setApiStatus(fromCache ? 'Live' : 'Fallback');
+    void prefetchQuoteForCategory(key);
+    return quote;
+  }
+
+  async function fetchPexelsImage(query) {
+    if (!PEXELS_API_KEY) {
+      return null;
+    }
+
+    const endpoint = `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&orientation=portrait&per_page=40&page=${Math.floor(Math.random() * 4) + 1}`;
+    const res = await fetch(endpoint, {
+      headers: { Authorization: PEXELS_API_KEY },
+      cache: 'no-store'
+    });
+
+    if (!res.ok) {
+      throw new Error(`Pexels HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    const photos = Array.isArray(data.photos) ? data.photos : [];
+    if (photos.length === 0) {
+      return null;
+    }
+
+    const pick = pickRandom(photos);
+    return pick?.src?.large2x || pick?.src?.large || pick?.src?.original || null;
+  }
+
+  async function fetchPixabayImage(query) {
+    if (!PIXABAY_API_KEY) {
+      return null;
+    }
+
+    const endpoint = `https://pixabay.com/api/?key=${encodeURIComponent(PIXABAY_API_KEY)}&q=${encodeURIComponent(query)}&image_type=photo&orientation=vertical&safesearch=true&per_page=50&page=${Math.floor(Math.random() * 4) + 1}`;
+    const res = await fetch(endpoint, { cache: 'no-store' });
+
+    if (!res.ok) {
+      throw new Error(`Pixabay HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    const hits = Array.isArray(data.hits) ? data.hits : [];
+    if (hits.length === 0) {
+      return null;
+    }
+
+    const pick = pickRandom(hits);
+    return pick.largeImageURL || pick.webformatURL || null;
+  }
+
+  function getPicsumImage(query) {
+    const seed = `${query}-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+    return `https://picsum.photos/seed/${encodeURIComponent(seed)}/1200/1200`;
+  }
+
+  async function getBackgroundImage(query) {
+    const q = (query || 'inspiration nature sky').trim();
+
+    try {
+      const fromPexels = await fetchPexelsImage(q);
+      if (fromPexels) {
+        return fromPexels;
+      }
+    } catch (_error) {}
+
+    try {
+      const fromPixabay = await fetchPixabayImage(q);
+      if (fromPixabay) {
+        return fromPixabay;
+      }
+    } catch (_error) {}
+
+    return getPicsumImage(q);
+  }
+
+  function preloadImage(url) {
+    if (!url) {
+      return Promise.reject(new Error('Missing image URL'));
+    }
+
+    if (state.preloadedImages.has(url)) {
+      return Promise.resolve(url);
+    }
+
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        state.preloadedImages.add(url);
+        resolve(url);
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
+  }
+
+  function getCardImageQuery(quote, style = 'inspirational') {
+    const category = normalizeCategory((quote && quote.category) || state.currentCategory || 'all');
+    return `${category} ${style}`.trim();
+  }
+
+  async function primeNextBackground(query) {
+    const searchQuery = (query || 'inspiration nature sky').trim();
+    if (!searchQuery) {
+      return null;
+    }
+
+    if (state.nextBackgroundUrl && state.nextBackgroundQuery === searchQuery) {
+      return state.nextBackgroundUrl;
+    }
+
+    if (state.nextBackgroundPromise && state.nextBackgroundQuery === searchQuery) {
+      return state.nextBackgroundPromise;
+    }
+
+    state.nextBackgroundQuery = searchQuery;
+    const requestedQuery = searchQuery;
+    state.nextBackgroundPromise = (async () => {
+      const nextImage = await getBackgroundImage(requestedQuery);
+      await preloadImage(nextImage);
+      if (state.nextBackgroundQuery === requestedQuery) {
+        state.nextBackgroundUrl = nextImage;
+      }
+      return nextImage;
+    })()
+      .catch(() => null)
+      .finally(() => {
+        state.nextBackgroundPromise = null;
+      });
+
+    return state.nextBackgroundPromise;
+  }
+
+  async function getPreparedBackground(query) {
+    const searchQuery = (query || 'inspiration nature sky').trim();
+    if (state.nextBackgroundUrl && state.nextBackgroundQuery === searchQuery) {
+      const prepared = state.nextBackgroundUrl;
+      state.nextBackgroundUrl = '';
+      return prepared;
+    }
+
+    const direct = await getBackgroundImage(searchQuery);
+    try {
+      await preloadImage(direct);
+    } catch (_error) {}
+    return direct;
+  }
+
+  function renderQuoteText() {
+    if (els.quoteText) {
+      els.quoteText.textContent = state.currentQuote.content;
+    }
+
+    if (els.quoteAuthor) {
+      els.quoteAuthor.textContent = `— ${state.currentQuote.author}`;
+    }
+  }
+
+  async function renderCurrentCard() {
+    renderQuoteText();
+
+    if (!els.bgImage || !state.currentImage) {
+      return;
+    }
+
+    els.quoteCard.classList.add('loading');
+
+    try {
+      if (!state.preloadedImages.has(state.currentImage)) {
+        await preloadImage(state.currentImage);
+      }
+      els.bgImage.style.opacity = '0';
+      els.bgImage.src = state.currentImage;
+      requestAnimationFrame(() => {
+        els.bgImage.style.opacity = '1';
+      });
+    } catch (_error) {
+      const fallback = getPicsumImage('fallback-image');
+      els.bgImage.src = fallback;
+    } finally {
+      els.quoteCard.classList.remove('loading');
+    }
+  }
+
+  async function generateNew() {
+    const category = getQuoteCacheKey(state.currentCategory);
+    let quote = null;
+    try {
+      quote = await getQuote(category);
+      if (!quote || !quote.content) {
+        quote = getLocalQuote(category, state.searchText);
+      }
+    } catch (_error) {
+      quote = getLocalQuote(category, state.searchText);
+      setApiStatus('Fallback');
+    }
+
+    state.currentQuote = quote;
+    renderQuoteText();
+
+    const imageQuery = getCardImageQuery(state.currentQuote, 'inspirational');
+    const backgroundTask = changeBackground(true, imageQuery);
+
+    state.generatedCount += 1;
+    persistStats();
+    updateStatsUi();
+    showToast('New quote loaded');
+    await backgroundTask;
+  }
+
+  async function changeBackground(silent = false, query = '') {
+    const searchQuery = (query || getCardImageQuery(state.currentQuote, 'cinematic background')).trim();
+    const image = await getPreparedBackground(searchQuery);
+    state.currentImage = image;
+    await renderCurrentCard();
+    void primeNextBackground(searchQuery);
+    if (!silent) {
+      showToast('Background changed');
+    }
+  }
+
+  function primeInitialCard() {
+    const initial = getInstantQuote(state.currentCategory, '');
+    const quote = initial.quote;
+    setApiStatus(initial.fromCache ? 'Live' : 'Fallback');
+    state.currentQuote = quote;
+    renderQuoteText();
+
+    const initialQuery = getCardImageQuery(state.currentQuote, 'inspirational');
+    const initialImage = getPicsumImage(`${initialQuery}-initial`);
+    state.currentImage = initialImage;
+
+    if (els.bgImage) {
+      els.bgImage.src = initialImage;
+      els.bgImage.style.opacity = '1';
+    }
+    if (els.quoteCard) {
+      els.quoteCard.classList.remove('loading');
+    }
+
+    void preloadImage(initialImage);
+    void prefetchQuoteForCategory(state.currentCategory);
+    void primeNextBackground(initialQuery);
+  }
+
+  async function downloadQuote() {
+    if (typeof html2canvas !== 'function') {
+      showToast('Download library not available');
+      return;
+    }
+
+    try {
+      const canvas = await html2canvas(els.quoteCard, {
+        backgroundColor: null,
+        useCORS: true,
+        scale: 2,
+        logging: false
+      });
+
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = `quotevibe-${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      state.downloadedCount += 1;
+      persistStats();
+      updateStatsUi();
+      showToast('Downloaded');
+    } catch (_error) {
+      showToast('Download failed. Try another image.');
+    }
+  }
+
+  function shareWhatsApp() {
+    const text = `"${state.currentQuote.content}" — ${state.currentQuote.author}\n\nMade with QuoteVibe`;
+    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank', 'noopener');
+  }
+
+  function setActivePageUi(page) {
+    const pages = els.pages || [];
+    pages.forEach((el) => {
+      el.classList.toggle('active', el.id === `page-${page}`);
+    });
+
+    const navTabs = els.navTabs || [];
+    if (navTabs[0]) {
+      navTabs[0].classList.toggle('active', page === 'home');
+    }
+    if (navTabs[1]) {
+      navTabs[1].classList.toggle('active', page === 'explore');
+    }
+  }
+
+  function switchPage(page) {
+    state.currentPage = page === 'explore' ? 'explore' : 'home';
+    setActivePageUi(state.currentPage);
+
+    if (state.currentPage === 'explore' && state.gallery.length === 0) {
+      seedInitialGallery(4);
+    }
+  }
+
+  function getGalleryById(id) {
+    return state.gallery.find((item) => item.id === Number(id));
+  }
+
+  function gallerySearchMatches(item, needle) {
+    if (!needle) {
+      return true;
+    }
+    const haystack = `${item.quote.content} ${item.quote.author} ${item.quote.category || ''}`.toLowerCase();
+    return haystack.includes(needle);
+  }
+
+  function renderSearchLabel(count, needle) {
+    if (!els.searchResultsLabel) {
+      return;
+    }
+
+    if (!needle) {
+      els.searchResultsLabel.classList.remove('show');
+      els.searchResultsLabel.textContent = '';
+      return;
+    }
+
+    els.searchResultsLabel.classList.add('show');
+    els.searchResultsLabel.textContent = `${count} result${count === 1 ? '' : 's'} for “${needle}”`;
+  }
+
+  function renderGallery() {
+    if (!els.galleryGrid) {
+      return;
+    }
+
+    const needle = state.searchText.trim().toLowerCase();
+    const filtered = state.gallery.filter((item) => gallerySearchMatches(item, needle));
+
+    renderSearchLabel(filtered.length, state.searchText.trim());
+
+    if (filtered.length === 0) {
+      els.galleryGrid.innerHTML = '<div class="gcard" style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;min-height:140px;color:var(--muted);">No quotes found. Try another search.</div>';
+      return;
+    }
+
+    els.galleryGrid.innerHTML = filtered.map((item) => `
+      <div class="gcard" title="${escapeHtml(item.quote.author)}">
+        <img src="${escapeHtml(item.image)}" alt="quote background" crossorigin="anonymous" loading="lazy"/>
+        <div class="gcard-content">
+          <p class="gcard-quote">“${escapeHtml(item.quote.content)}”</p>
+          <p class="gcard-author">— ${escapeHtml(item.quote.author)}</p>
+        </div>
+        <div class="gcard-actions">
+          <button class="gcard-btn" onclick="dlGCard(${item.id})">Download</button>
+          <button class="gcard-btn" onclick="shareGCard(${item.id})">Share</button>
+        </div>
+        <div class="gcard-border"></div>
+      </div>
+    `).join('');
+  }
+
+  function makeGalleryItemSync() {
+    const quote = getLocalQuote(state.currentCategory, state.searchText);
+    const image = getPicsumImage(`${quote.category || state.currentCategory}-gallery-${state.nextGalleryId}`);
+    return {
+      id: state.nextGalleryId++,
+      quote,
+      image
+    };
+  }
+
+  function seedInitialGallery(count = 4) {
+    state.gallery = [];
+    state.nextGalleryId = 1;
+    for (let i = 0; i < count; i += 1) {
+      state.gallery.push(makeGalleryItemSync());
+    }
+    renderGallery();
+  }
+
+  async function makeGalleryItem() {
+    const quote = await getQuote(state.currentCategory);
+    const image = await getBackgroundImage(`${quote.category || state.currentCategory} wallpaper`);
+
+    return {
+      id: state.nextGalleryId++,
+      quote,
+      image
+    };
+  }
+
+  async function loadGallery(reset) {
+    if (state.galleryLoading) {
+      return;
+    }
+
+    if (reset) {
+      seedInitialGallery(4);
+      return;
+    }
+
+    state.galleryLoading = true;
+    if (els.showMoreBtn) {
+      els.showMoreBtn.disabled = true;
+      els.showMoreBtn.textContent = 'Loading...';
+    }
+
+    try {
+      const batchSize = 8;
+      const items = await Promise.all(Array.from({ length: batchSize }, () => makeGalleryItem()));
+      state.gallery.push(...items);
+      renderGallery();
+    } catch (_error) {
+      showToast('Unable to load gallery right now');
+    } finally {
+      state.galleryLoading = false;
+      if (els.showMoreBtn) {
+        els.showMoreBtn.disabled = false;
+        els.showMoreBtn.textContent = 'Show More';
+      }
+    }
+  }
+
+  async function dlGCard(id) {
+    const card = getGalleryById(id);
+    if (!card) {
+      return;
+    }
+
+    const prevQuote = state.currentQuote;
+    const prevImage = state.currentImage;
+
+    state.currentQuote = card.quote;
+    state.currentImage = card.image;
+    await renderCurrentCard();
+    await downloadQuote();
+
+    state.currentQuote = prevQuote;
+    state.currentImage = prevImage;
+    await renderCurrentCard();
+  }
+
+  function shareGCard(id) {
+    const card = getGalleryById(id);
+    if (!card) {
+      return;
+    }
+
+    const text = `"${card.quote.content}" — ${card.quote.author}\n\nShared via QuoteVibe`;
+    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank', 'noopener');
+  }
+
+  function setAdTimerUi(value) {
+    if (!els.adTimer) {
+      return;
+    }
+    els.adTimer.style.transform = 'scale(0.92)';
+    els.adTimer.style.opacity = '0.82';
+    requestAnimationFrame(() => {
+      els.adTimer.textContent = String(value);
+      els.adTimer.style.transform = 'scale(1)';
+      els.adTimer.style.opacity = '1';
+    });
+  }
+
+  function closeAdGate() {
+    if (state.adTimerId) {
+      clearInterval(state.adTimerId);
+      state.adTimerId = null;
+    }
+
+    if (els.adGateOverlay) {
+      els.adGateOverlay.classList.remove('open');
+    }
+
+    if (els.adSkipBtn) {
+      els.adSkipBtn.disabled = true;
+      els.adSkipBtn.classList.remove('ready');
+    }
+  }
+
+  function showMoreWithAd() {
+    state.pendingShowMore = true;
+    state.adRemaining = 5;
+
+    if (els.adGateOverlay) {
+      els.adGateOverlay.classList.add('open');
+    }
+
+    setAdTimerUi(state.adRemaining);
+
+    if (els.adSkipBtn) {
+      els.adSkipBtn.disabled = true;
+      els.adSkipBtn.classList.remove('ready');
+    }
+
+    if (state.adTimerId) {
+      clearInterval(state.adTimerId);
+    }
+
+    state.adTimerId = setInterval(() => {
+      state.adRemaining -= 1;
+
+      setAdTimerUi(Math.max(0, state.adRemaining));
+
+      if (state.adRemaining <= 0) {
+        clearInterval(state.adTimerId);
+        state.adTimerId = null;
+
+        if (els.adSkipBtn) {
+          els.adSkipBtn.disabled = false;
+          els.adSkipBtn.classList.add('ready');
+        }
+      }
+    }, 1000);
+  }
+
+  async function adGateComplete() {
+    if (!els.adSkipBtn || els.adSkipBtn.disabled) {
+      return;
+    }
+
+    closeAdGate();
+
+    if (state.pendingShowMore) {
+      state.pendingShowMore = false;
+      await loadGallery(false);
+    }
+  }
+
+  function bindCategoryPills() {
+    const pills = els.categoryPills || [];
+
+    pills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        pills.forEach((x) => x.classList.remove('active'));
+        pill.classList.add('active');
+
+        state.currentCategory = normalizeCategory(pill.dataset.cat || 'all');
+        generateNew();
+        void prefetchQuoteForCategory(state.currentCategory);
+
+        if (state.currentPage === 'explore') {
+          loadGallery(true);
+        }
+      });
+    });
+  }
+
+  function bindSearch() {
+    if (!els.searchInput) {
+      return;
+    }
+
+    els.searchInput.addEventListener('input', () => {
+      state.searchText = els.searchInput.value.trim();
+
+      if (state.currentPage === 'explore') {
+        renderGallery();
+      }
+    });
+
+    els.searchInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && state.currentPage === 'home') {
+        generateNew();
+      }
+    });
+  }
+
+  function cacheElements() {
+    els.quoteCard = document.getElementById('quoteCard');
+    els.bgImage = document.getElementById('bgImage');
+    els.quoteText = document.getElementById('quoteText');
+    els.quoteAuthor = document.getElementById('quoteAuthor');
+    els.searchInput = document.getElementById('searchInput');
+    els.statGenerated = document.getElementById('statGenerated');
+    els.statDownloaded = document.getElementById('statDownloaded');
+    els.apiStatusText = document.getElementById('apiStatusText');
+    els.galleryGrid = document.getElementById('galleryGrid');
+    els.showMoreBtn = document.getElementById('showMoreBtn');
+    els.searchResultsLabel = document.getElementById('searchResultsLabel');
+    els.adGateOverlay = document.getElementById('adGateOverlay');
+    els.adTimer = document.getElementById('adTimer');
+    els.adSkipBtn = document.getElementById('adSkipBtn');
+    els.toast = document.getElementById('toast');
+    els.pages = document.querySelectorAll('.page');
+    els.navTabs = document.querySelectorAll('.nav-tab');
+    els.categoryPills = document.querySelectorAll('#categories .cat-pill');
+  }
+
+  function init() {
+    cacheElements();
+    bindCategoryPills();
+    bindSearch();
+
+    updateStatsUi();
+    setActivePageUi('home');
+
+    if (els.adGateOverlay) {
+      els.adGateOverlay.addEventListener('click', (event) => {
+        if (event.target === els.adGateOverlay && els.adSkipBtn && !els.adSkipBtn.disabled) {
+          adGateComplete();
+        }
+      });
+    }
+
+    primeInitialCard();
+    seedInitialGallery(4);
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
