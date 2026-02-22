@@ -56,6 +56,10 @@
     .nav-tab { padding:7px 16px; border-radius:100px; border:none; background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:0.76rem; font-weight:500; cursor:pointer; transition:all 0.2s; }
     .nav-tab.active { background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#0a0a0f; font-weight:600; }
 
+    /* INSTALL BUTTON */
+    .install-btn { display:none; align-items:center; gap:6px; padding:6px 16px; border-radius:100px; border:1px solid rgba(201,168,76,0.4); background:transparent; color:#c9a84c; font-family:'DM Sans',sans-serif; font-size:0.72rem; font-weight:500; cursor:pointer; transition:all 0.22s ease; flex-shrink:0; }
+    .install-btn:hover { background:rgba(201,168,76,0.06); border-color:#c9a84c; transform:translateY(-2px); }
+
     /* API STATUS */
     .api-status { display:flex; gap:6px; align-items:center; font-size:0.67rem; color:var(--muted); letter-spacing:1px; flex-shrink:0; }
     .dot { width:6px; height:6px; border-radius:50%; background:#25d366; animation:pulse 2s infinite; }
@@ -165,6 +169,7 @@
       .ad-sidebar { display:none !important; }
       header { padding:14px; }
       .search-wrap { max-width:100%; order:3; flex-basis:100%; }
+      .install-btn { padding:8px 18px; font-size:0.76rem; }
       .main-content { padding:14px 12px 32px; }
       .card-wrapper { max-width:100%; aspect-ratio:4/5; }
       #quoteCard { padding:30px 22px; }
@@ -191,6 +196,7 @@
     <button class="nav-tab active" onclick="switchPage('home'); generateNew();">✦ Generate</button>
     <button class="nav-tab" onclick="switchPage('explore')">◈ Explore</button>
   </div>
+  <button class="install-btn" id="installBtn" type="button" aria-label="Install App">📲 Install App</button>
   <div class="api-status"><div class="dot"></div><span id="apiStatusText">Live</span></div>
 </header>
 
@@ -1150,6 +1156,75 @@
     <a href="contact.html">Contact</a>
   </nav>
 </footer>
+
+<script>
+let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
+
+function isInstalledMode() {
+  return (
+    localStorage.getItem('appInstalled') === 'true' ||
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true
+  );
+}
+
+function hideInstallButton() {
+  if (installBtn) installBtn.style.display = 'none';
+}
+
+if (installBtn) installBtn.style.display = 'none';
+if (isInstalledMode()) hideInstallButton();
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  if (isInstalledMode()) return;
+
+  deferredPrompt = e;
+  if (installBtn) installBtn.style.display = 'inline-flex';
+
+  if (!sessionStorage.getItem('installPrompted')) {
+    setTimeout(() => {
+      if (!deferredPrompt || isInstalledMode()) return;
+
+      deferredPrompt.prompt();
+      sessionStorage.setItem('installPrompted', 'true');
+
+      deferredPrompt.userChoice.then((result) => {
+        if (result.outcome === 'accepted') {
+          hideInstallButton();
+          localStorage.setItem('appInstalled', 'true');
+        }
+        deferredPrompt = null;
+      });
+    }, 3000);
+  }
+});
+
+if (installBtn) {
+  installBtn.addEventListener('click', () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((result) => {
+        if (result.outcome === 'accepted') {
+          hideInstallButton();
+          localStorage.setItem('appInstalled', 'true');
+        }
+        deferredPrompt = null;
+      });
+    }
+  });
+}
+
+if (localStorage.getItem('appInstalled')) hideInstallButton();
+if (window.matchMedia('(display-mode: standalone)').matches) hideInstallButton();
+
+window.addEventListener('appinstalled', () => {
+  localStorage.setItem('appInstalled', 'true');
+  hideInstallButton();
+  deferredPrompt = null;
+});
+</script>
 
 <script>
 if('serviceWorker' in navigator){
