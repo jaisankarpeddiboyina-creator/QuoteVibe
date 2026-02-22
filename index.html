@@ -57,7 +57,7 @@
     .nav-tab.active { background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#0a0a0f; font-weight:600; }
 
     /* INSTALL BUTTON */
-    .install-btn { display:none; align-items:center; gap:6px; padding:6px 16px; border-radius:100px; border:1px solid rgba(201,168,76,0.4); background:transparent; color:#c9a84c; font-family:'DM Sans',sans-serif; font-size:0.72rem; font-weight:500; cursor:pointer; transition:all 0.22s ease; flex-shrink:0; }
+    .install-btn { align-items:center; gap:4px; padding:6px 16px; border:1px solid rgba(201,168,76,0.4); border-radius:100px; background:transparent; color:#c9a84c; font-family:'DM Sans',sans-serif; font-size:0.72rem; cursor:pointer; transition:all 0.22s ease; }
     .install-btn:hover { background:rgba(201,168,76,0.06); border-color:#c9a84c; transform:translateY(-2px); }
 
     /* API STATUS */
@@ -1177,11 +1177,13 @@ if (installBtn) installBtn.style.display = 'none';
 if (isInstalledMode()) hideInstallButton();
 
 window.addEventListener('beforeinstallprompt', (e) => {
+  console.log('INSTALL: beforeinstallprompt fired');
   e.preventDefault();
   if (isInstalledMode()) return;
 
   deferredPrompt = e;
   if (installBtn) installBtn.style.display = 'inline-flex';
+  console.log('INSTALL: button display set to', installBtn ? installBtn.style.display : 'installBtn not found');
 
   if (!sessionStorage.getItem('installPrompted')) {
     setTimeout(() => {
