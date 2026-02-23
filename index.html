@@ -193,8 +193,9 @@
 </head>
 <body>
 
-<!-- TOP AD -->
-<div class="ad-top"><!-- ADSENSE 728x90 TOP -->Advertisement · 728×90</div>
+<!-- TOP AD (temporarily disabled)
+<div class="ad-top">Advertisement · 728×90</div>
+-->
 
 <!-- HEADER -->
 <header>
@@ -213,7 +214,9 @@
 
 <!-- MAIN WRAPPER -->
 <div class="app-wrapper">
-  <div class="ad-sidebar" id="adLeft"><!-- ADSENSE 120x600 LEFT -->Ad · 120×600</div>
+  <!-- LEFT SIDEBAR AD (temporarily disabled)
+  <div class="ad-sidebar" id="adLeft">Ad · 120×600</div>
+  -->
 
   <div class="main-content">
 
@@ -264,7 +267,9 @@
         </button>
       </div>
 
-      <div class="ad-inline"><!-- ADSENSE INLINE 728x90 -->Advertisement · 728×90</div>
+      <!-- INLINE AD (temporarily disabled)
+      <div class="ad-inline">Advertisement · 728×90</div>
+      -->
     </div>
 
     <!-- PAGE: EXPLORE -->
@@ -275,30 +280,35 @@
       </div>
       <div class="gallery-grid" id="galleryGrid"></div>
       <div class="show-more-wrap">
+        <!-- Ad gate removed temporarily -->
         <button class="btn-show-more" id="showMoreBtn" onclick="showMoreWithAd()">Show More</button>
       </div>
     </div>
 
   </div>
 
-  <div class="ad-sidebar" id="adRight"><!-- ADSENSE 120x600 RIGHT -->Ad · 120×600</div>
+  <!-- RIGHT SIDEBAR AD (temporarily disabled)
+  <div class="ad-sidebar" id="adRight">Ad · 120×600</div>
+  -->
 </div>
 
-<!-- AD GATE MODAL -->
+<!-- AD GATE MODAL (temporarily disabled)
 <div class="ad-gate-overlay" id="adGateOverlay">
   <div class="ad-gate-box">
     <h3>Quick Sponsor Break</h3>
     <p>Watch this short ad for 5 seconds to unlock more quote cards.</p>
-    <div class="ad-gate-ad"><!-- ADSENSE MODAL 300x250 -->Advertisement · 300×250</div>
+    <div class="ad-gate-ad">Advertisement · 300×250</div>
     <div class="ad-timer" id="adTimer">5</div>
     <button class="ad-skip-btn" id="adSkipBtn" onclick="adGateComplete()">Skip & Continue</button>
   </div>
 </div>
+-->
 
 <div class="toast" id="toast">Ready</div>
 
-<!-- BOTTOM AD -->
-<div class="ad-bottom"><!-- ADSENSE 728x90 BOTTOM -->Advertisement · 728×90</div>
+<!-- BOTTOM AD (temporarily disabled)
+<div class="ad-bottom">Advertisement · 728×90</div>
+-->
 
 <script>
   const PEXELS_API_KEY = '';
@@ -1027,39 +1037,10 @@
   }
 
   function showMoreWithAd() {
-    state.pendingShowMore = true;
-    state.adRemaining = 5;
-
-    if (els.adGateOverlay) {
-      els.adGateOverlay.classList.add('open');
-    }
-
-    setAdTimerUi(state.adRemaining);
-
-    if (els.adSkipBtn) {
-      els.adSkipBtn.disabled = true;
-      els.adSkipBtn.classList.remove('ready');
-    }
-
-    if (state.adTimerId) {
-      clearInterval(state.adTimerId);
-    }
-
-    state.adTimerId = setInterval(() => {
-      state.adRemaining -= 1;
-
-      setAdTimerUi(Math.max(0, state.adRemaining));
-
-      if (state.adRemaining <= 0) {
-        clearInterval(state.adTimerId);
-        state.adTimerId = null;
-
-        if (els.adSkipBtn) {
-          els.adSkipBtn.disabled = false;
-          els.adSkipBtn.classList.add('ready');
-        }
-      }
-    }, 1000);
+    // Ad gate removed temporarily: show more loads instantly.
+    state.pendingShowMore = false;
+    closeAdGate();
+    void loadGallery(false);
   }
 
   async function adGateComplete() {
